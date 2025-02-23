@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import Budget from "../models/Budget";
+import Expense from "../models/Expense";
 
 export class budgetController {
   // se crean los métodos para la API
@@ -28,6 +29,10 @@ export class budgetController {
   };
 
   static getOne = async (req: Request, res: Response) => {
+    // Cuando encuentra incluye los gastos tambien en la respuesta con el metodo include
+    const budget = await Budget.findByPk(req.params.budgetId, {
+      include: [Expense],
+    });
     res.json(req.budget);
   };
 

@@ -15,9 +15,20 @@ export class ExpensesController {
     }
   };
 
-  static getOne = async (req: Request, res: Response) => {};
+  static getOne = async (req: Request, res: Response) => {
+    res.json(req.expense);
+  };
 
-  static update = async (req: Request, res: Response) => {};
+  static update = async (req: Request, res: Response) => {
+    await req.expense.update(req.body);
+    res.json({
+      expense: req.expense,
+      message: "Gasto actualizado exitosamente",
+    });
+  };
 
-  static delete = async (req: Request, res: Response) => {};
+  static delete = async (req: Request, res: Response) => {
+    await req.expense.destroy();
+    res.json({ message: "Gasto eliminado exitosamente" });
+  };
 }

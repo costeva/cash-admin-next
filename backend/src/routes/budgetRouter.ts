@@ -8,12 +8,18 @@ import {
   validateBudgetInput,
 } from "../middleware/budget";
 import { ExpensesController } from "../controllers/ExpenseController";
-import { validateExpenseInput } from "../middleware/expense";
+import {
+  validateExpenseExists,
+  validateExpenseId,
+  validateExpenseInput,
+} from "../middleware/expense";
 const router = Router();
 // se crean los middleware para validar los parámetros de la API, estas dos lineas permite que las rutas que tengan el parametro budgetId, sean validadas por los middleware validateBudgetID y validateBudgetExists
 router.param("budgetId", validateBudgetID);
 router.param("budgetId", validateBudgetExists);
 
+router.param("expenseId", validateExpenseId);
+router.param("expenseId", validateExpenseExists);
 // se crean las rutas para la API
 router.get("/", budgetController.getAll);
 
@@ -49,8 +55,17 @@ router.post(
 
 router.get("/:budgetId/expenses/:expenseId", ExpensesController.getOne);
 
-router.put("/:budgetId/expenses/:expenseId", ExpensesController.update);
+router.put(
+  "/:budgetId/expenses/:expenseId",
+  validateExpenseInput,
+  handleInputErrors,
+  ExpensesController.update
+);
 
-router.delete("/:budgetId/expenses/:expenseId", ExpensesController.delete);
+router.delete(
+  "/:budgetId/expenses/:expenseId",
+
+  ExpensesController.delete
+);
 
 export default router;

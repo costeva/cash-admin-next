@@ -1,5 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import { body } from "express-validator";
+import { body, param, validationResult } from "express-validator";
+import Expense from "../models/Expense";
+
+declare global {
+  namespace Express {
+    export interface Request {
+      expense?: Expense;
+    }
+  }
+}
 
 export const validateExpenseInput = async (
   req: Request,
@@ -33,4 +42,48 @@ export const validateExpenseInput = async (
 
   // Si no hay errores, continuar con el siguiente middleware
   next();
+};
+
+export const validateExpenseId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  await param("expenseId")
+    .isInt()
+    .withMessage("ID debe ser un número entero")
+    .custom((value) => value > 0)
+    .withMessage("ID debe ser mayor a 0")
+    .run(req);
+
+  let errors = validationResult(req);
+
+  // Si hay errores, responder con un estado 400 y los errores
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() });
+    return;
+  }
+
+  // Si no hay errores, continuar con el siguiente middleware
+  next();
+};
+
+export const validateExpenseExists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { expenseId } = req.params;
+    const expense = await Expense.findByPk(expenseId);
+    if (!expense) {
+      res.status(404).json({ message: "Gasto no encontrado" });
+      return;
+    }
+
+    req.expense = expense;
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Error en el servidor" });
+  }
 };
