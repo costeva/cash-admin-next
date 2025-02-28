@@ -5,6 +5,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  AllowNull,
   BelongsTo,
 } from "sequelize-typescript";
 import Budget from "./Budget";
@@ -13,18 +14,19 @@ import Budget from "./Budget";
   tableName: "expenses",
 })
 class Expense extends Model {
+  @AllowNull(false)
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   declare name: string;
-
+  @AllowNull(false)
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   declare description: string;
-
+  @AllowNull(false)
   @Column({
     type: DataType.DECIMAL,
     allowNull: false,
