@@ -17,7 +17,7 @@ class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  declare id: number;
+  declare id: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)

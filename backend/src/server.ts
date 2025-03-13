@@ -23,6 +23,7 @@ app.use(morgan("dev"));
 
 app.use(express.json());
 // se crea la ruta para la API
+
 app.use("/api/v1/budgets", bugetRouter);
 
 app.use("/api/v1/auth", authRouter);
