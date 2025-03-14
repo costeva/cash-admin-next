@@ -71,4 +71,26 @@ router.post(
 );
 
 router.get("/user", authentificate, AuthController.user);
+
+router.post(
+  "/update-password",
+  authentificate,
+  body("current-password")
+    .notEmpty()
+    .withMessage("Password actual es requerido"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("Password debe tener al menos 8 caracteres"),
+  handleInputErrors,
+  AuthController.updatePassword
+);
+
+router.post(
+  "/check-password",
+  authentificate,
+  body("password").notEmpty().withMessage("Password actual es requerido"),
+
+  handleInputErrors,
+  AuthController.checkPassword
+);
 export default router;

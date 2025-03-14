@@ -77,3 +77,11 @@ export const validateBudgetInput = async (
   // Si no hay errores, continuar con el siguiente middleware
   next();
 };
+
+export function hasAccess(req: Request, res: Response, next: NextFunction) {
+  if (Number(req.user.id) !== req.budget.userId) {
+    res.status(403).json({ message: "No tienes acceso a este presupuesto" });
+    return;
+  }
+  next();
+}

@@ -132,4 +132,35 @@ export class AuthController {
   static user = async (req: Request, res: Response) => {
     res.json(req.user);
   };
+
+  static updatePassword = async (req: Request, res: Response) => {
+    const { current_password, password } = req.body;
+    const { id } = req.user;
+    const user = await User.findByPk(id);
+    const isPasswordCorrect = await comparePassword(
+      current_password,
+      user.password
+    );
+    if (!isPasswordCorrect) {
+      res.status(401).json({ message: "Password incorrecto" });
+      return;
+    }
+    user.password = await hashPassword(password);
+    await user.save();
+
+    res.json("Password actualizado");
+  };
+
+  static checkPassword = async (req: Request, res: Response) => {
+    const { password } = req.body;
+    const { id } = req.user;
+    const user = await User.findByPk(id);
+    const isPasswordCorrect = await comparePassword(password, user.password);
+    if (!isPasswordCorrect) {
+      res.status(401).json({ message: "Password incorrecto" });
+      return;
+    }
+
+    res.json("Password correcto");
+  };
 }

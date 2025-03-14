@@ -11,6 +11,9 @@ export class budgetController {
           ["createdAt", "DESC"],
           //TODO: filtrar por usuario autenticado
         ],
+        where: {
+          userId: req.user.id,
+        },
       });
       res.status(200).json({ budgets });
     } catch (error) {
@@ -21,6 +24,7 @@ export class budgetController {
   static create = async (req: Request, res: Response) => {
     try {
       const budget = new Budget(req.body);
+      budget.userId = Number(req.user.id);
       await budget.save();
       res.status(201).json({ budget });
     } catch (error) {
@@ -30,9 +34,10 @@ export class budgetController {
 
   static getOne = async (req: Request, res: Response) => {
     // Cuando encuentra incluye los gastos tambien en la respuesta con el metodo include
-    const budget = await Budget.findByPk(req.params.budgetId, {
+    const budget = await Budget.findByPk(req.budget.id, {
       include: [Expense],
     });
+
     res.json(req.budget);
   };
 

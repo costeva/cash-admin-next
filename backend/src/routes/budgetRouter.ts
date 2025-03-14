@@ -3,6 +3,7 @@ import { body, param } from "express-validator";
 import { budgetController } from "../controllers/budgetController";
 import { handleInputErrors } from "../middleware/validation";
 import {
+  hasAccess,
   validateBudgetExists,
   validateBudgetID,
   validateBudgetInput,
@@ -13,10 +14,16 @@ import {
   validateExpenseId,
   validateExpenseInput,
 } from "../middleware/expense";
+import { authentificate } from "../middleware/auth";
 const router = Router();
+
+router.use(authentificate);
+// se importan los controladores y los middleware necesarios para la API, es decir los middleware para validar los parámetros de la API y los controladores para manejar las peticiones de la API
+
 // se crean los middleware para validar los parámetros de la API, estas dos lineas permite que las rutas que tengan el parametro budgetId, sean validadas por los middleware validateBudgetID y validateBudgetExists
 router.param("budgetId", validateBudgetID);
 router.param("budgetId", validateBudgetExists);
+router.param("budgetId", hasAccess);
 
 router.param("expenseId", validateExpenseId);
 router.param("expenseId", validateExpenseExists);
