@@ -6,7 +6,7 @@ export class ExpensesController {
 
   static create = async (req: Request, res: Response) => {
     try {
-      const expense = new Expense(req.body);
+      const expense = await Expense.create(req.body);
       expense.budgetId = req.budget.id;
       await expense.save();
       res.status(201).json({ expense, message: "Gasto creado exitosamente" });
@@ -23,12 +23,12 @@ export class ExpensesController {
     await req.expense.update(req.body);
     res.json({
       expense: req.expense,
-      message: "Gasto actualizado exitosamente",
+      message: "Gasto Actualizado Exitosamente",
     });
   };
 
   static delete = async (req: Request, res: Response) => {
     await req.expense.destroy();
-    res.json({ message: "Gasto eliminado exitosamente" });
+    res.json({ message: "Gasto Eliminado Exitosamente" });
   };
 }

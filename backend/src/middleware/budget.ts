@@ -79,7 +79,7 @@ export const validateBudgetInput = async (
 };
 
 export function hasAccess(req: Request, res: Response, next: NextFunction) {
-  if (Number(req.user.id) !== req.budget.userId) {
+  if (req.budget.userId !== Number(req.user.id)) {
     res.status(403).json({ message: "No tienes acceso a este presupuesto" });
     return;
   }
