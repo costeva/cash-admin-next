@@ -16,19 +16,23 @@ export class budgetController {
         },
       });
       res.status(200).json({ budgets });
+      return;
     } catch (error) {
-      res.status(500).json({ message: "Error en el servidor" });
+      res.status(500).json({ error: "Error en el servidor" });
+      return;
     }
   };
 
   static create = async (req: Request, res: Response) => {
     try {
-      const budget = new Budget(req.body);
+      const budget = await Budget.create(req.body);
       budget.userId = Number(req.user.id);
       await budget.save();
-      res.status(201).json({ budget });
+      res.status(201).json({ message: "Presupuesto Creado Exitosamente" });
+      return;
     } catch (error) {
-      res.status(500).json({ message: "Error en el servidor" });
+      res.status(500).json({ error: "Hubo un error" });
+      return;
     }
   };
 
@@ -38,16 +42,16 @@ export class budgetController {
       include: [Expense],
     });
 
-    res.json(req.budget);
+    res.json(budget);
   };
 
   static update = async (req: Request, res: Response) => {
     await req.budget.update(req.body);
-    res.status(200).json({ data: req.budget });
+    res.status(200).json({ message: "Presupuesto actualizado" });
   };
 
   static delete = async (req: Request, res: Response) => {
     await req.budget.destroy();
-    res.json("Presupuesto eliminado");
+    res.json({ message: "Presupuesto eliminado" });
   };
 }
