@@ -20,7 +20,6 @@ export class AuthEmail {
             <p>e ingresa el siguiente token: ${user.token}</p>
         `,
       });
-      console.log("Message sent: %s", email);
     } catch (error) {
       console.error("ERROR", error);
       throw error;
@@ -40,7 +39,6 @@ export class AuthEmail {
             <p>e ingresa el siguiente token: ${user.token}</p>
         `,
       });
-      console.log("Message sent: %s", email);
     } catch (error) {
       console.error("ERROR", error);
       throw error;

@@ -9,24 +9,27 @@ import { generateJwt } from "../utils/jwt";
 export class AuthController {
   static creatAccount = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
     const userExists = await User.findOne({ where: { email } });
     if (userExists) {
-      res.status(400).json({ message: "El usuario ya existe" });
+      res
+        .status(409)
+        .json({ message: "Un usuario ya se registro con ese email" });
       return;
     }
     try {
-      const user = new User(req.body);
+      const user = await User.create(req.body);
       user.password = await hashPassword(password);
-      user.token = generateToken();
+      user.token = generateToken(userExists);
 
       await user.save();
-      console.log("User created");
+
       await AuthEmail.sendConfirmationEmail({
         name: user.name,
         email: user.email,
         token: user.token,
       });
-      console.log("Email sent");
+
       res.status(201).json({ message: "Cuenta creada", user });
     } catch (error) {
       res.status(500).json({ message: "Error en el servidor" });
@@ -51,7 +54,7 @@ export class AuthController {
     const { email, password } = req.body;
     //revisar que el usuario exista
     const userExists = await User.findOne({ where: { email } });
-    console.log(userExists, "userExists");
+
     if (!userExists) {
       const error = new Error("Usuario no encontrado");
       res.status(404).json({ message: error.message });
@@ -88,7 +91,7 @@ export class AuthController {
       res.status(404).json({ message: error.message });
       return;
     }
-    userExists.token = generateToken();
+    userExists.token = generateToken(userExists);
     await userExists.save();
 
     AuthEmail.passwordReset({

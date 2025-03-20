@@ -14,7 +14,7 @@ router.post(
     .isLength({ min: 8 })
     .withMessage("´Password debe tener al menos 8 caracteres"),
   body("email").isEmail().withMessage("Email es requerido"),
-
+  handleInputErrors,
   AuthController.creatAccount
 );
 

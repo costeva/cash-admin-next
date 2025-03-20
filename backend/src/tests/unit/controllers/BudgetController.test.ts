@@ -225,7 +225,6 @@ describe("BudgetController.update", () => {
     await budgetController.update(req, res);
     const data = res._getJSONData();
 
-    console.log(data);
     expect(res.statusCode).toBe(200);
     expect(data.message).toBe("Presupuesto actualizado");
     expect(muckBudget.update).toHaveBeenCalledTimes(1);

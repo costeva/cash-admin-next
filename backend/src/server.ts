@@ -5,13 +5,13 @@ import { db } from "./config/db";
 import bugetRouter from "./routes/budgetRouter";
 import authRouter from "./routes/authRouter";
 
-async function connectDB() {
+export async function connectDB() {
   try {
     await db.authenticate();
     db.sync();
-    console.log(colors.green("Conexión a la base de datos establecida"));
+    /*   console.log(colors.green("Conexión a la base de datos establecida")); */
   } catch (error) {
-    console.error(colors.red("Error al conectar a la base de datos: "), error);
+    /*     console.error(colors.red("Error al conectar a la base de datos: "), error); */
   }
 }
 connectDB();
@@ -27,5 +27,9 @@ app.use(express.json());
 app.use("/api/v1/budgets", bugetRouter);
 
 app.use("/api/v1/auth", authRouter);
+
+app.use("/", (req, res) => {
+  res.send("API is running...");
+});
 
 export default app;
