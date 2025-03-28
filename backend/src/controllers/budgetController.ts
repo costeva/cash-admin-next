@@ -7,10 +7,7 @@ export class budgetController {
   static getAll = async (req: Request, res: Response) => {
     try {
       const budgets = await Budget.findAll({
-        order: [
-          ["createdAt", "DESC"],
-          //TODO: filtrar por usuario autenticado
-        ],
+        order: [["createdAt", "DESC"]],
         where: {
           userId: req.user.id,
         },

@@ -21,10 +21,7 @@ router.post(
 router.post(
   "/confirm-account",
   limiter,
-  body("token")
-    .notEmpty()
-    .isLength({ min: 6, max: 6 })
-    .withMessage("El token es requerido"),
+  body("token").isLength({ min: 6, max: 6 }).withMessage("Token no es valido"),
   handleInputErrors,
 
   AuthController.confirmAccount
